@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+
 namespace QuoteManager
 {
     class Program
@@ -7,9 +9,21 @@ namespace QuoteManager
         { 
             Quote[] quotes = new Quote[100];
             int i = 0;
-            quotes[i++] = new Quote("Athas","Linux printing was designed and implemented by people working to preserve the rainforest by making it utterly impossible to consume paper.");
-            quotes[i++] = new Quote("Unknown","ALSA is like the emperors new clothes.It never works, but people say it’s because you’re a noob.");
-            quotes[i++] = new Quote("--kfx","ruby is what happens when some kid learns java then looks at perl and thinks ‘I can fix this!’.");
+            try
+            {
+                FileInfo quotesText = new FileInfo("quotes.txt");
+                StreamReader quoteStream = quotesText.OpenText();
+                String line;
+                while((line = quoteStream.ReadLine()) != null)
+                {
+                    String[] line_ = line.Split('~');
+                    quotes[i++] = new Quote(line_[1],line_[0]); 
+                }
+            } catch(Exception e)
+            {
+                Console.Write(e);
+            }
+            Console.Read();
             for (int j = 0; j < i; j++)
             {
                 Console.WriteLine(quotes[j].getQuote());

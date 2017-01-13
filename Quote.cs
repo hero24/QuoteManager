@@ -1,5 +1,7 @@
-﻿namespace QuoteManager
+﻿using System;
+namespace QuoteManager
 {
+    [Serializable()]
     public class Quote
     {
         public string author

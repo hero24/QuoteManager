@@ -27,5 +27,9 @@ namespace QuoteManager
         {
             references[i++] = reference; 
         }
+        public override string ToString()
+        {
+            return quote;
+        }
     }
 }

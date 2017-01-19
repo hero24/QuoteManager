@@ -1,12 +1,24 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 namespace QuoteManager
 {
-    public class GUI
+    class QuoteMenu : MainMenu
     {
-        public GUI()
+        public QuoteMenu(string title)
         {
-            Application.Run(new Form());
+            MenuItem quotes = new MenuItem(title);
+            MenuItems.Add(quotes);
+            MenuItem load = new MenuItem("Load");
+            quotes.MenuItems.Add(load);
+        }
+    }
+    
+    public class GUI:Form
+    {
+        public GUI(string title)
+        {
+            Text = title;
+            Menu = new QuoteMenu("Quotes");
         }
     }
 }

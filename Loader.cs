@@ -6,20 +6,37 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace QuoteManager
 {
+    public delegate void ErrorReport(string error,int code);
     class Loader
     {
         Quote[] quotes;
+        int i;
         static string savedData = "quotes.bin";
-        public void load(string failbackFilename)
+        ErrorReport error;
+        
+        public Loader(ErrorReport errorOut,string failbackFilename)
         {
+            error = errorOut;
             quotes = new Quote[100];
-            int i = 0;
             FileInfo binaryData = new FileInfo(Loader.savedData);
             if (!binaryData.Exists)
             {
-                try
+                loadFromFile(failbackFilename);
+            } else
+            {
+                loadBinaryData();
+            }
+        }
+        ~Loader()
+        {
+            saveBinaryData();
+        }
+        
+        public void loadFromFile(string filename)
+        {
+            try
                 {
-                    FileInfo quotesText = new FileInfo(failbackFilename);
+                    FileInfo quotesText = new FileInfo(filename);
                     StreamReader quoteStream = quotesText.OpenText();
                     String line;
                     while ((line = quoteStream.ReadLine()) != null)
@@ -30,11 +47,13 @@ namespace QuoteManager
                 }
                 catch (Exception e)
                 {
-                    Console.Write(e);
-                }
-            } else
-            {
-                try
+                    error("Loading error, problem with reading from file",1);
+                }            
+        }
+        
+        void loadBinaryData()
+        {
+            try
                 {
                     Stream quotesBinary = File.Open(Loader.savedData, FileMode.Open);
                     BinaryFormatter deserialize = new BinaryFormatter();
@@ -44,19 +63,12 @@ namespace QuoteManager
                 }
                 catch(Exception e)
                 {
-                    Console.Write(e);
+                    error("Loading error, problem with reading saved quotes",2);
                 }
-            }
-            Console.Read();
-            for (int j = 0; j < i; j++)
-            {
-                Console.WriteLine(quotes[j].getQuote());
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(quotes[j].author);
-                Console.ResetColor();
-                Console.Read();
-            }
+        }
+        
+        void saveBinaryData()
+        {
             Stream stream = File.Open(Loader.savedData, FileMode.Create);
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, quotes);

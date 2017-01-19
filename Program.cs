@@ -2,12 +2,15 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
+
+
 namespace QuoteManager
 {
     class Program
     {
         static void Main(string[] args)
-        { 
+        {
+            GUI mygui = new GUI();
             Quote[] quotes = new Quote[100];
             int i = 0;
             FileInfo binaryData = new FileInfo("quotes.bin");

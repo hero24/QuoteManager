@@ -37,13 +37,27 @@ namespace QuoteManager
     
     public class GUI:Form
     {
-        Loader loader;
+        private static int TAB = 10;
+        
+        private Loader loader;
+        private Label currentQuote = new Label();
+        private Label currentAuthor = new Label();
+        
         public GUI(string title, Loader load)
         {
             Text = title;
-            Menu = new QuoteMenu("Quotes",load);
             loader = load;
-            Application.ApplicationExit += OnExit; 
+            Menu = new QuoteMenu("Quotes",load);
+            Application.ApplicationExit += OnExit;
+            currentAuthor.Text = loader.quotes[0].author;
+            currentQuote.Text = loader.quotes[0].getQuote();
+            currentAuthor.Top = currentQuote.Height;
+            currentAuthor.Left = GUI.TAB * 2;
+            currentAuthor.AutoSize = true;
+            currentQuote.AutoSize = true;
+            currentQuote.Left = GUI.TAB;
+            Controls.Add(currentAuthor);
+            Controls.Add(currentQuote);
         }
         private void OnExit(Object sender, EventArgs ea)
         {

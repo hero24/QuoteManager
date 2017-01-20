@@ -8,7 +8,7 @@ namespace QuoteManager
     public delegate void ErrorReport(string error,int code);
     public class Loader
     {
-        Quote[] quotes;
+        public Quote[] quotes;
         int i;
         static string savedData = "quotes.bin";
         ErrorReport error;

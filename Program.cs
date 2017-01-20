@@ -11,8 +11,10 @@ namespace QuoteManager
         }
         public static void Main(string[] args)
         {
-            Loader load = new Loader(StaticGUI.ErrorMsg,"quotes.txt.txt");
-            Application.Run(new GUI("QuoteManager",load));
+            Quote[] quotes = new Quote[100];
+            Loader load = new Loader(quotes,StaticGUI.ErrorMsg,"quotes.txt.txt");
+            quotes = load.storage;
+            Application.Run(new GUI("QuoteManager",load,quotes));
         }
     }
 }

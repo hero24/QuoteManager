@@ -8,7 +8,7 @@ namespace QuoteManager
     public delegate void ErrorReport(string error,int code);
     public class Loader
     {
-        public Quote[] quotes;
+        Quote[] quotes;
         int i;
         public int count
         {
@@ -17,13 +17,20 @@ namespace QuoteManager
                 return i;
             }
         }
+        public Quote[] storage
+        {
+            get
+            {
+                return quotes;
+            }
+        }
         static string savedData = "quotes.bin";
         ErrorReport error;
         
-        public Loader(ErrorReport errorOut,string failbackFilename)
+        public Loader(Quote[] storage, ErrorReport errorOut,string failbackFilename)
         {
             error = errorOut;
-            quotes = new Quote[100];
+            quotes = storage;
             FileInfo binaryData = new FileInfo(Loader.savedData);
             if (!binaryData.Exists)
             {

@@ -46,19 +46,21 @@ namespace QuoteManager
         private Label currentAuthor = new Label();
         private Button prev = new Button();
         private Button next = new Button();
+        private Quote[] quotes;
         
-        public GUI(string title, Loader load)
+        public GUI(string title, Loader load, Quote[] storage)
         {
+            Width = 800;
             Text = title;
             loader = load;
-            Width = 800;
+            quotes = storage;
             Menu = new QuoteMenu("Quotes",load);
             Application.ApplicationExit += OnExit;
-            currentAuthor.Text = loader.quotes[i].author;
-            currentQuote.Text = loader.quotes[i++].getQuote();
+            currentAuthor.Text = storage[i].author;
+            currentQuote.Text = storage[i].getQuote();
             next.Left = ClientSize.Width - next.Width - GUI.TAB;
-            currentAuthor.AutoSize = true;
             currentQuote.MaximumSize = new Size(ClientSize.Width - prev.Width - next.Width - (GUI.TAB * 3),0);
+            currentAuthor.AutoSize = true;
             currentQuote.AutoSize = true;
             Controls.Add(currentAuthor);
             Controls.Add(currentQuote);
@@ -85,8 +87,8 @@ namespace QuoteManager
         {
             if(i < loader.count-1)
             {
-                currentAuthor.Text = loader.quotes[++i].author;
-                currentQuote.Text = loader.quotes[i].getQuote();
+                currentAuthor.Text = quotes[++i].author;
+                currentQuote.Text = quotes[i].getQuote();
                 resizeLabels();
             } else
             {
@@ -97,8 +99,8 @@ namespace QuoteManager
         {
             if(i > 0 && i < loader.count)
             {
-                currentAuthor.Text = loader.quotes[--i].author;
-                currentQuote.Text = loader.quotes[i].getQuote();
+                currentAuthor.Text = quotes[--i].author;
+                currentQuote.Text = quotes[i].getQuote();
                 resizeLabels();
             } else
             {
@@ -107,3 +109,4 @@ namespace QuoteManager
         }
     }
 }
+

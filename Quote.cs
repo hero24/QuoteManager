@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+// "A quote is just a tattoo on the tongue." ~ William F. DeVault
 namespace QuoteManager
 {
     [Serializable()]

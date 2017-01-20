@@ -1,5 +1,6 @@
 using System.Windows.Forms;
 using System;
+// "I live my life a quarter mile at a time."  Dom Toretto @ Fast and Furious
 namespace QuoteManager
 {
     class Program

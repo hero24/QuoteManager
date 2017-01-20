@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+// "Ask any racer. Any real racer. It don't matter if you win by an inch or a mile. Winning's winning." ~ Dom Toretto. @ Fast and Furious
 namespace QuoteManager
 {
     class QuoteMenu : MainMenu

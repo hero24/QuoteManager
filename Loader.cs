@@ -6,7 +6,7 @@ using System.Linq;
 namespace QuoteManager
 {
     public delegate void ErrorReport(string error,int code);
-    class Loader
+    public class Loader
     {
         Quote[] quotes;
         int i;
@@ -50,7 +50,7 @@ namespace QuoteManager
                 }            
         }
         
-        void loadBinaryData()
+        public void loadBinaryData()
         {
             try
                 {
@@ -66,7 +66,7 @@ namespace QuoteManager
                 }
         }
         
-        void saveBinaryData()
+        public void saveBinaryData()
         {
             Stream stream = File.Open(Loader.savedData, FileMode.Create);
             BinaryFormatter formatter = new BinaryFormatter();

@@ -12,21 +12,42 @@ namespace QuoteManager
     }
     class QuoteMenu : MainMenu
     {
-        public QuoteMenu(string title)
+        Loader loader;
+        public QuoteMenu(string title, Loader loader)
         {
+            this.loader = loader;
             MenuItem quotes = new MenuItem(title);
             MenuItems.Add(quotes);
-            MenuItem load = new MenuItem("Load");
-            quotes.MenuItems.Add(load);
+            MenuItem save = new MenuItem("Save");
+            quotes.MenuItems.Add(save);
+            MenuItem exit = new MenuItem("Exit");
+            exit.Click += new EventHandler(OnExit);
+            save.Click += OnLoad;
+            quotes.MenuItems.Add(exit);
+        }
+        private void OnExit(object sender, EventArgs ea)
+        {
+            Application.Exit();
+        }
+        private void OnLoad(object sender, EventArgs ea)
+        {
+            loader.saveBinaryData();
         }
     }
     
     public class GUI:Form
     {
-        public GUI(string title)
+        Loader loader;
+        public GUI(string title, Loader load)
         {
             Text = title;
-            Menu = new QuoteMenu("Quotes");
+            Menu = new QuoteMenu("Quotes",load);
+            loader = load;
+            Application.ApplicationExit += OnExit; 
+        }
+        private void OnExit(Object sender, EventArgs ea)
+        {
+            loader.saveBinaryData();
         }
     }
 }

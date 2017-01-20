@@ -13,18 +13,34 @@ namespace QuoteManager
     }
     class QuoteMenu : MainMenu
     {
+        private static PROGRAM_TITLE = "Quotes";
+        private static CURRENT_TITLE = "Current";
         Loader loader;
-        public QuoteMenu(string title, Loader loader)
+        public QuoteMenu(Loader loader)
         {
             this.loader = loader;
-            MenuItem quotes = new MenuItem(title);
-            MenuItems.Add(quotes);
+            programMenu();
+            currentMenu();            
+        }
+        private void currentMenu()
+        {
+            MenuItem current = new MenuItem(QuoteMenu.CURRENT_TITLE);
+            MenuItem references = new MenuItem("Add reference");
+            MenuItem flags = new MenuItem("Add flag");
+            current.MenuItems.Add(references);
+            current.MenuItems.Add(flags);
+            MenuItems.Add(current);
+        }
+        private void programMenu()
+        {
+            MenuItem quotes = new MenuItem(QuoteMenu.PROGRAM_TITLE);
             MenuItem save = new MenuItem("Save");
-            quotes.MenuItems.Add(save);
             MenuItem exit = new MenuItem("Exit");
-            exit.Click += new EventHandler(OnExit);
+            exit.Click += OnExit;
             save.Click += OnLoad;
+            quotes.MenuItems.Add(save);
             quotes.MenuItems.Add(exit);
+            MenuItems.Add(quotes);
         }
         private void OnExit(object sender, EventArgs ea)
         {
@@ -54,7 +70,7 @@ namespace QuoteManager
             Text = title;
             loader = load;
             quotes = storage;
-            Menu = new QuoteMenu("Quotes",load);
+            Menu = new QuoteMenu(load);
             Application.ApplicationExit += OnExit;
             currentAuthor.Text = storage[i].author;
             currentQuote.Text = storage[i].getQuote();

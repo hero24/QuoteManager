@@ -14,6 +14,8 @@ namespace QuoteManager
         private int i;
         /*
         TODO:
+        maybe a serializable object for flag && reference
+        create new or choose from list of existing?
         references -> what the quote is about
         flags -> any user set flags such as, already used.
         */

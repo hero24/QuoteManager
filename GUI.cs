@@ -3,6 +3,13 @@ using System.Windows.Forms;
 // "Ask any racer. Any real racer. It don't matter if you win by an inch or a mile. Winning's winning." ~ Dom Toretto. @ Fast and Furious
 namespace QuoteManager
 {
+    class StaticGUI
+    {
+        public static void ErrorMsg(string error, int code)
+        {
+            MessageBox.Show(error);
+        }
+    }
     class QuoteMenu : MainMenu
     {
         public QuoteMenu(string title)

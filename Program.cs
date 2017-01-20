@@ -11,7 +11,7 @@ namespace QuoteManager
         }
         public static void Main(string[] args)
         {
-            Loader load = new Loader(ErrorReporter,"quotes.txt.txt");
+            Loader load = new Loader(StaticGUI.ErrorMsg,"quotes.txt.txt");
             Application.Run(new GUI("QuoteManager"));
         }
     }

@@ -6,6 +6,8 @@ namespace QuoteManager
 {
     class StaticGUI
     {
+        public static int Width = 800;
+        public static int TAB = 10;
         public static void ErrorMsg(string error, int code)
         {
             MessageBox.Show(error,"Error");
@@ -13,8 +15,8 @@ namespace QuoteManager
     }
     class QuoteMenu : MainMenu
     {
-        private static PROGRAM_TITLE = "Quotes";
-        private static CURRENT_TITLE = "Current";
+        private static string PROGRAM_TITLE = "Quotes";
+        private static string CURRENT_TITLE = "Current";
         Loader loader;
         public QuoteMenu(Loader loader)
         {
@@ -34,10 +36,13 @@ namespace QuoteManager
         private void programMenu()
         {
             MenuItem quotes = new MenuItem(QuoteMenu.PROGRAM_TITLE);
+            MenuItem add_ = new MenuItem("Add");
             MenuItem save = new MenuItem("Save");
             MenuItem exit = new MenuItem("Exit");
             exit.Click += OnExit;
             save.Click += OnLoad;
+            add_.Click += OnAdd;
+            quotes.MenuItems.Add(add_);
             quotes.MenuItems.Add(save);
             quotes.MenuItems.Add(exit);
             MenuItems.Add(quotes);
@@ -50,12 +55,35 @@ namespace QuoteManager
         {
             loader.saveBinaryData();
         }
+        private void OnAdd(object sender, EventArgs ea)
+        {
+            AddQuote addWindow = new AddQuote();
+
+        }
     }
-    
-    public class GUI:Form
+    public class AddQuote:Form
     {
-        private static int TAB = 10;
-        
+        public AddQuote()
+        {
+            TextBox quote = new TextBox();
+            TextBox author = new TextBox();
+            Button AddButton = new Button();
+            AddButton.Text = "Add";
+            Text = "Add Quote";
+            Width = StaticGUI.Width;
+            Controls.Add(quote);
+            Controls.Add(author);
+            Controls.Add(AddButton);
+            Closing += OnClose;
+            Show();
+        }
+        private void OnClose(object sender, EventArgs ae)
+        {
+            StaticGUI.ErrorMsg("Are you sure, you will loose unsaved changes",4);
+        }
+    }
+    public class GUI:Form
+    {        
         private Loader loader;
         private int i = 0;
         private Label currentQuote = new Label();
@@ -66,7 +94,7 @@ namespace QuoteManager
         
         public GUI(string title, Loader load, Quote[] storage)
         {
-            Width = 800;
+            Width = StaticGUI.Width;
             Text = title;
             loader = load;
             quotes = storage;
@@ -74,8 +102,8 @@ namespace QuoteManager
             Application.ApplicationExit += OnExit;
             currentAuthor.Text = storage[i].author;
             currentQuote.Text = storage[i].getQuote();
-            next.Left = ClientSize.Width - next.Width - GUI.TAB;
-            currentQuote.MaximumSize = new Size(ClientSize.Width - prev.Width - next.Width - (GUI.TAB * 3),0);
+            next.Left = ClientSize.Width - next.Width - StaticGUI.TAB;
+            currentQuote.MaximumSize = new Size(ClientSize.Width - prev.Width - next.Width - (StaticGUI.TAB * 3),0);
             currentAuthor.AutoSize = true;
             currentQuote.AutoSize = true;
             Controls.Add(currentAuthor);
@@ -83,7 +111,7 @@ namespace QuoteManager
             prev.Click += OnPrevClick;
             next.Click += OnNextClick;
             prev.Text = "Previous";
-            prev.Left = GUI.TAB;
+            prev.Left = StaticGUI.TAB;
             next.Text = "Next";
             Controls.Add(prev);
             Controls.Add(next);
@@ -91,8 +119,8 @@ namespace QuoteManager
         }
         private void resizeLabels()
         {
-            currentAuthor.Left = (GUI.TAB * 2) + prev.Width;
-            currentQuote.Left = (GUI.TAB * 2) + prev.Width;
+            currentAuthor.Left = (StaticGUI.TAB * 2) + prev.Width;
+            currentQuote.Left = (StaticGUI.TAB * 2) + prev.Width;
             currentAuthor.Top = currentQuote.Height;            
         }
         private void OnExit(Object sender, EventArgs ea)

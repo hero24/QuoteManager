@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Linq;
 // "As for Guns N' Roses, I don't think there's ever a chance of a reunion." ~ Slash
 namespace QuoteManager
 {

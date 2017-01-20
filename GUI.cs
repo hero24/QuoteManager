@@ -7,7 +7,7 @@ namespace QuoteManager
     {
         public static void ErrorMsg(string error, int code)
         {
-            MessageBox.Show(error);
+            MessageBox.Show(error,"Error");
         }
     }
     class QuoteMenu : MainMenu

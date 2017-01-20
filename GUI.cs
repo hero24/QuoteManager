@@ -40,28 +40,61 @@ namespace QuoteManager
         private static int TAB = 10;
         
         private Loader loader;
+        private int i = 0;
         private Label currentQuote = new Label();
         private Label currentAuthor = new Label();
+        private Button prev = new Button();
+        private Button next = new Button();
         
         public GUI(string title, Loader load)
         {
             Text = title;
             loader = load;
+            Width = 800;
             Menu = new QuoteMenu("Quotes",load);
             Application.ApplicationExit += OnExit;
-            currentAuthor.Text = loader.quotes[0].author;
-            currentQuote.Text = loader.quotes[0].getQuote();
+            currentAuthor.Text = loader.quotes[i].author;
+            currentQuote.Text = loader.quotes[i++].getQuote();
+            next.Left = ClientSize.Width - next.Width - GUI.TAB;
+            currentAuthor.Left = (GUI.TAB * 2) + prev.Width;
+            currentQuote.Left = GUI.TAB + prev.Width;
             currentAuthor.Top = currentQuote.Height;
-            currentAuthor.Left = GUI.TAB * 2;
             currentAuthor.AutoSize = true;
             currentQuote.AutoSize = true;
-            currentQuote.Left = GUI.TAB;
             Controls.Add(currentAuthor);
             Controls.Add(currentQuote);
+            prev.Click += OnPrevClick;
+            next.Click += OnNextClick;
+            prev.Text = "Previous";
+            next.Text = "Next";
+            Controls.Add(prev);
+            Controls.Add(next);
         }
         private void OnExit(Object sender, EventArgs ea)
         {
             loader.saveBinaryData();
+        }
+        private void OnNextClick(object sender, EventArgs ae)
+        {
+            if(i < loader.count-1)
+            {
+                currentAuthor.Text = loader.quotes[++i].author;
+                currentQuote.Text = loader.quotes[i].getQuote();
+            } else
+            {
+                StaticGUI.ErrorMsg("No more quotes to display",3);
+            }
+        }
+        private void OnPrevClick(object sender, EventArgs ae)
+        {
+            if(i > 0 && i < loader.count)
+            {
+                currentAuthor.Text = loader.quotes[--i].author;
+                currentQuote.Text = loader.quotes[i].getQuote();
+            } else
+            {
+                StaticGUI.ErrorMsg("No more quotes to display",3);
+            }
         }
     }
 }

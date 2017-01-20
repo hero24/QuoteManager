@@ -10,6 +10,13 @@ namespace QuoteManager
     {
         public Quote[] quotes;
         int i;
+        public int count
+        {
+            get
+            {
+                return i;
+            }
+        }
         static string savedData = "quotes.bin";
         ErrorReport error;
         

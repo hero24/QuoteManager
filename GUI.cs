@@ -61,25 +61,59 @@ namespace QuoteManager
 
         }
     }
+    public class PlaceholderedBox : TextBox
+    {
+        string placeholder;
+        public PlaceholderedBox(string Text)
+        {
+            placeholder = Text;
+            this.Text = Text;
+            GotFocus += RemoveText;
+            LostFocus += AddText;
+        }
+        private void RemoveText(object sender, EventArgs ae)
+        {
+            Text = "";
+        }
+        private void AddText(object sender, EventArgs ae)
+        {
+            if(String.IsNullOrWhiteSpace(Text))
+            {
+                Text = placeholder;
+            }
+        }
+    }
     public class AddQuote:Form
     {
         public AddQuote()
         {
-            TextBox quote = new TextBox();
-            TextBox author = new TextBox();
+            TextBox quote = new PlaceholderedBox("Quote");
+            TextBox author = new PlaceholderedBox("Author");
+            author.Top = quote.Height;
+            quote.Left = StaticGUI.TAB;
+            author.Left = StaticGUI.TAB;
+            quote.Width = StaticGUI.Width - (StaticGUI.TAB * 4);
             Button AddButton = new Button();
+            AddButton.Top = quote.Height + author.Height;
             AddButton.Text = "Add";
+            AddButton.Left = StaticGUI.TAB;
             Text = "Add Quote";
             Width = StaticGUI.Width;
             Controls.Add(quote);
             Controls.Add(author);
             Controls.Add(AddButton);
+            AddButton.Click += OnAdd;
             Closing += OnClose;
             Show();
         }
         private void OnClose(object sender, EventArgs ae)
         {
             StaticGUI.ErrorMsg("Are you sure, you will loose unsaved changes",4);
+        }
+        private void OnAdd(object sender, EventArgs ae)
+        {
+            Closing -= OnClose;
+            Close();
         }
     }
     public class GUI:Form

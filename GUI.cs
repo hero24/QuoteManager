@@ -17,6 +17,7 @@ namespace QuoteManager
     {
         public static int Width = 800;
         public static int TAB = 10;
+        public static string ActionDelete = "Delete";
         public static void ErrorMsg(string error, int code)
         {
             MessageBox.Show(error,"Error",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
@@ -51,7 +52,7 @@ namespace QuoteManager
             MenuItem current = new MenuItem(ProgramMenu.CURRENT_TITLE);
             MenuItem references = new MenuItem("Add reference");
             MenuItem flags = new MenuItem("Add flag");
-            MenuItem delete = new MenuItem("Delete");
+            MenuItem delete = new MenuItem(StaticGUI.ActionDelete);
             MenuItem copy = new MenuItem("Copy");
             current.MenuItems.Add(references);
             current.MenuItems.Add(flags);
@@ -174,6 +175,15 @@ namespace QuoteManager
             Close();
         }
     }
+    public class DataList:ComboBox
+    {
+        Button actionButton;
+        public DataList(string buttonText)
+        {
+            actionButton = new Button();
+            actionButton.Text = buttonText;
+        }
+    }
     public class GUI:GUIParent
     {        
         private Loader loader;
@@ -183,6 +193,8 @@ namespace QuoteManager
         private Button prev = new Button();
         private Button next = new Button();
         private Storage<Quote> quotes;
+        private DataList refs;
+        private DataList flags;
         public int currentQuoteId
         {
             get 
@@ -211,7 +223,17 @@ namespace QuoteManager
             next.Text = "Next";
             Controls.Add(prev);
             Controls.Add(next);
+            ComboBoxes();
             refresh();
+        }
+        private void ComboBoxes()
+        {
+            refs = new DataList(StaticGUI.ActionDelete);
+            flags = new DataList(StaticGUI.ActionDelete);
+            refs.Top = 150;
+            flags.Top = 200;
+            Controls.Add(refs);
+            Controls.Add(flags);
         }
         public Quote getCurrentQuote()
         {

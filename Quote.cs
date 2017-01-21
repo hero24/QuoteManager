@@ -40,6 +40,7 @@ namespace QuoteManager
             references = new Storage<DataSegment>(10);
             flags = new Storage<DataSegment>(10);
             addReference("Test");
+            addReference("Its my life");
         }
         public string getQuote()
         {

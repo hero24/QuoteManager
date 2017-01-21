@@ -63,12 +63,14 @@ namespace QuoteManager
         }
         public void Remove(T data)
         {
-            int j;
-            for(j = 0; j < i;j++)
+            for(int j = 0; j < i;j++)
             {
-                if(storage[j].Equals(data)) break;
+                if(ReferenceEquals(storage[j],data))
+                {
+                    RemoveAt(j);
+                    break;
+                }
             }
-            RemoveAt(j);
         }
     }
 }

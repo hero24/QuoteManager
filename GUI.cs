@@ -4,7 +4,6 @@ using System.Windows.Forms;
 // "Ask any racer. Any real racer. It don't matter if you win by an inch or a mile. Winning's winning." ~ Dom Toretto. @ Fast and Furious
 namespace QuoteManager
 {
-    public delegate void ComboAction();
     public class GUIParent : Form
     {
         public GUIParent()
@@ -181,9 +180,11 @@ namespace QuoteManager
         Button actionButton;
         GUI parent;
         Storage<DataSegment> storage;
+        DataSegment currentData;
         public DataList(Storage<DataSegment> data,string buttonText, GUI parent,int top, int left)
         {
             this.parent = parent;
+            DropDownStyle = ComboBoxStyle.DropDownList;
             Top = top;
             Left = left;
             storage = data;
@@ -196,18 +197,28 @@ namespace QuoteManager
             {
                 Items.Add(storage.Get(i));
             }
+            if (storage.Length > 0) 
+            {
+                SelectedIndex = 0;
+                currentData = (DataSegment) Items[0];
+            }
             parent.Controls.Add(actionButton);
+            SelectedIndexChanged += OnChange;
         }
         private void OnClick(object sender, EventArgs ae)
         {
             delDS();
         }
+        private void OnChange(object sender, EventArgs ae)
+        {
+            StaticGUI.ErrorMsg("Changed " +  SelectedItem.ToString(),100);
+            currentData = (DataSegment) SelectedItem;
+        }
         private void delDS()
         {
             StaticGUI.ErrorMsg("Not yet implemented",100);
-            DataSegment reference = (DataSegment) SelectedItem;
-            Items.Remove(reference);
-            storage.Remove(reference);
+            Items.Remove(currentData);
+            storage.Remove(currentData);
             parent.changeCombos();
         }
     }
@@ -313,6 +324,7 @@ namespace QuoteManager
             {
                 currentAuthor.Text = quotes.Get(--i).author;
                 currentQuote.Text = quotes.Get(i).getQuote();
+                changeCombos();
                 resizeLabels();
             } else
             {

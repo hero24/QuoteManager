@@ -57,7 +57,7 @@ namespace QuoteManager
         }
         private void OnAdd(object sender, EventArgs ea)
         {
-            AddQuote addWindow = new AddQuote();
+            AddQuote addWindow = new AddQuote(loader.getStorage());
 
         }
     }
@@ -85,10 +85,14 @@ namespace QuoteManager
     }
     public class AddQuote:Form
     {
-        public AddQuote()
+        Storage<Quote> storage;
+        TextBox quote;
+        TextBox author;
+        public AddQuote(Storage<Quote> quotes)
         {
-            TextBox quote = new PlaceholderedBox("Quote");
-            TextBox author = new PlaceholderedBox("Author");
+            storage = quotes;
+            quote = new PlaceholderedBox("Quote");
+            author = new PlaceholderedBox("Author");
             author.Top = quote.Height;
             quote.Left = StaticGUI.TAB;
             author.Left = StaticGUI.TAB;
@@ -112,6 +116,13 @@ namespace QuoteManager
         }
         private void OnAdd(object sender, EventArgs ae)
         {
+            if(quote.Text == "Quote" || author.Text == "Author")
+            {
+                StaticGUI.ErrorMsg("Quote and Author are required",5);
+                return;
+            }
+            Quote newQuote = new Quote(quote.Text,author.Text);
+            storage.Add(newQuote);
             Closing -= OnClose;
             Close();
         }
@@ -124,9 +135,9 @@ namespace QuoteManager
         private Label currentAuthor = new Label();
         private Button prev = new Button();
         private Button next = new Button();
-        private Quote[] quotes;
+        private Storage<Quote> quotes;
         
-        public GUI(string title, Loader load, Quote[] storage)
+        public GUI(string title, Loader load, Storage<Quote> storage)
         {
             Width = StaticGUI.Width;
             Text = title;
@@ -134,8 +145,8 @@ namespace QuoteManager
             quotes = storage;
             Menu = new QuoteMenu(load);
             Application.ApplicationExit += OnExit;
-            currentAuthor.Text = storage[i].author;
-            currentQuote.Text = storage[i].getQuote();
+            currentAuthor.Text = storage.Get(i).author;
+            currentQuote.Text = storage.Get(i).getQuote();
             next.Left = ClientSize.Width - next.Width - StaticGUI.TAB;
             currentQuote.MaximumSize = new Size(ClientSize.Width - prev.Width - next.Width - (StaticGUI.TAB * 3),0);
             currentAuthor.AutoSize = true;
@@ -163,10 +174,10 @@ namespace QuoteManager
         }
         private void OnNextClick(object sender, EventArgs ae)
         {
-            if(i < loader.count-1)
+            if(i < quotes.Length-1)
             {
-                currentAuthor.Text = quotes[++i].author;
-                currentQuote.Text = quotes[i].getQuote();
+                currentAuthor.Text = quotes.Get(++i).author;
+                currentQuote.Text = quotes.Get(i).getQuote();
                 resizeLabels();
             } else
             {
@@ -175,10 +186,10 @@ namespace QuoteManager
         }
         private void OnPrevClick(object sender, EventArgs ae)
         {
-            if(i > 0 && i < loader.count)
+            if(i > 0 && i < quotes.Length)
             {
-                currentAuthor.Text = quotes[--i].author;
-                currentQuote.Text = quotes[i].getQuote();
+                currentAuthor.Text = quotes.Get(--i).author;
+                currentQuote.Text = quotes.Get(i).getQuote();
                 resizeLabels();
             } else
             {

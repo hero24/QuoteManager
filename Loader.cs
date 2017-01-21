@@ -8,26 +8,11 @@ namespace QuoteManager
     public delegate void ErrorReport(string error,int code);
     public class Loader
     {
-        Quote[] quotes;
-        int i;
-        public int count
-        {
-            get
-            {
-                return i;
-            }
-        }
-        public Quote[] storage
-        {
-            get
-            {
-                return quotes;
-            }
-        }
+        Storage<Quote> quotes;
         static string savedData = "quotes.bin";
         ErrorReport error;
         
-        public Loader(Quote[] storage, ErrorReport errorOut,string failbackFilename)
+        public Loader(Storage<Quote> storage, ErrorReport errorOut,string failbackFilename)
         {
             error = errorOut;
             quotes = storage;
@@ -55,7 +40,7 @@ namespace QuoteManager
                     while ((line = quoteStream.ReadLine()) != null)
                     {
                         String[] line_ = line.Split('~');
-                        quotes[i++] = new Quote(line_[1], line_[0]);
+                        quotes.Add(new Quote(line_[1], line_[0]));
                     }
                 }
                 catch (Exception e)
@@ -70,9 +55,8 @@ namespace QuoteManager
                 {
                     Stream quotesBinary = File.Open(Loader.savedData, FileMode.Open);
                     BinaryFormatter deserialize = new BinaryFormatter();
-                    quotes = (Quote[])deserialize.Deserialize(quotesBinary);
+                    quotes.Add((Storage<Quote>)deserialize.Deserialize(quotesBinary));
                     quotesBinary.Close();
-                    while (quotes[i] != null) i++;
                 }
                 catch(Exception e)
                 {
@@ -86,6 +70,11 @@ namespace QuoteManager
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, quotes);
             stream.Close();
+        }
+        
+        public Storage<Quote> getStorage()
+        {
+            return quotes;
         }
     }
 }

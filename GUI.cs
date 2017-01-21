@@ -10,7 +10,13 @@ namespace QuoteManager
         public static int TAB = 10;
         public static void ErrorMsg(string error, int code)
         {
-            MessageBox.Show(error,"Error");
+            MessageBox.Show(error,"Error",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+        }
+        public static bool ErrorMsgYesNo(string error,int code)
+        {
+            DialogResult result = MessageBox.Show(error,"Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Exclamation);
+            if (result == DialogResult.OK) return true;
+            else return false;
         }
     }
     class ProgramMenu : MainMenu
@@ -122,7 +128,11 @@ namespace QuoteManager
         }
         private void OnClose(object sender, EventArgs ae)
         {
-            StaticGUI.ErrorMsg("Are you sure, you will loose unsaved changes",4);
+            if(!StaticGUI.ErrorMsgYesNo("Are you sure, you will loose unsaved changes",4))
+            {
+                FormClosingEventArgs e = (FormClosingEventArgs) ae;
+                e.Cancel = true;
+            }
         }
         private void OnAdd(object sender, EventArgs ae)
         {

@@ -180,15 +180,13 @@ namespace QuoteManager
     {
         Button actionButton;
         GUI parent;
-        ComboAction action;
         Storage<DataSegment> storage;
-        public DataList(ComboAction action, Storage<DataSegment> data,string buttonText, GUI parent,int top, int left)
+        public DataList(Storage<DataSegment> data,string buttonText, GUI parent,int top, int left)
         {
             this.parent = parent;
             Top = top;
             Left = left;
             storage = data;
-            this.action = action;
             actionButton = new Button();
             actionButton.Text = buttonText;
             actionButton.Left = Left + StaticGUI.TAB + Width;
@@ -202,7 +200,15 @@ namespace QuoteManager
         }
         private void OnClick(object sender, EventArgs ae)
         {
-            action();
+            delDS();
+        }
+        private void delDS()
+        {
+            StaticGUI.ErrorMsg("Not yet implemented",100);
+            DataSegment reference = (DataSegment) SelectedItem;
+            Items.Remove(reference);
+            storage.Remove(reference);
+            parent.changeCombos();
         }
     }
     public class GUI:GUIParent
@@ -249,20 +255,16 @@ namespace QuoteManager
         }
         private void ComboBoxes()
         {
-            refs = new DataList(del,quotes.Get(i).getReferences(),StaticGUI.ActionDelete,this,150,StaticGUI.TAB);
-            flags = new DataList(del,quotes.Get(i).getFlags(),StaticGUI.ActionDelete,this,200,StaticGUI.TAB);
+            refs = new DataList(quotes.Get(i).getReferences(),StaticGUI.ActionDelete,this,150,StaticGUI.TAB);
+            flags = new DataList(quotes.Get(i).getFlags(),StaticGUI.ActionDelete,this,200,StaticGUI.TAB);
             Controls.Add(refs);
             Controls.Add(flags);
         }
-        private void changeCombos()
+        public void changeCombos()
         {
             Controls.Remove(refs);
             Controls.Remove(flags);
             ComboBoxes();
-        }
-        private void del()
-        {
-            StaticGUI.ErrorMsg("Not yet implemented",100);
         }
         public Quote getCurrentQuote()
         {

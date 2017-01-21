@@ -46,6 +46,7 @@ namespace QuoteManager
             current.MenuItems.Add(references);
             current.MenuItems.Add(flags);
             current.MenuItems.Add(delete);
+            delete.Click += OnDelete;
             MenuItems.Add(current);
         }
         private void programMenu()
@@ -61,6 +62,13 @@ namespace QuoteManager
             quotes.MenuItems.Add(save);
             quotes.MenuItems.Add(exit);
             MenuItems.Add(quotes);
+        }
+        private void OnDelete(object sender, EventArgs ea)
+        {
+            if(StaticGUI.ErrorMsgYesNo("Are you sure you want to delete this quote",6))
+            {
+                parent.removeCurrent();
+            }
         }
         private void OnExit(object sender, EventArgs ea)
         {
@@ -159,7 +167,13 @@ namespace QuoteManager
         private Button prev = new Button();
         private Button next = new Button();
         private Storage<Quote> quotes;
-        
+        public int currentQuoteId
+        {
+            get 
+            {
+                return i;
+            }
+        }
         public GUI(string title, Loader load, Storage<Quote> storage)
         {
             Width = StaticGUI.Width;
@@ -181,6 +195,11 @@ namespace QuoteManager
             next.Text = "Next";
             Controls.Add(prev);
             Controls.Add(next);
+            refresh();
+        }
+        public void removeCurrent()
+        {
+            quotes.RemoveAt(i);
             refresh();
         }
         public void refresh()

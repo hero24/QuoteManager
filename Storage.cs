@@ -52,7 +52,13 @@ namespace QuoteManager
             }
             throw new IndexOutOfRangeException();
         }
-        
-        
+        public void RemoveAt(int index)
+        {
+            for(int j = index + 1,k=index;j < i; j++,k++)
+            {
+                storage[k] = storage[j];
+            }
+            i--;
+        }
     }
 }

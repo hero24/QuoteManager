@@ -13,20 +13,27 @@ namespace QuoteManager
             MessageBox.Show(error,"Error");
         }
     }
-    class QuoteMenu : MainMenu
+    class ProgramMenu : MainMenu
     {
+        /*
+        TODO:
+        private void aboutMenu();
+        private void Quotes -> Refresh();
+        */
         private static string PROGRAM_TITLE = "Quotes";
         private static string CURRENT_TITLE = "Current";
         Loader loader;
-        public QuoteMenu(Loader loader)
+        GUI parent;
+        public ProgramMenu(Loader loader, GUI parent)
         {
             this.loader = loader;
+            this.parent = parent;
             programMenu();
             currentMenu();            
         }
         private void currentMenu()
         {
-            MenuItem current = new MenuItem(QuoteMenu.CURRENT_TITLE);
+            MenuItem current = new MenuItem(ProgramMenu.CURRENT_TITLE);
             MenuItem references = new MenuItem("Add reference");
             MenuItem flags = new MenuItem("Add flag");
             current.MenuItems.Add(references);
@@ -35,7 +42,7 @@ namespace QuoteManager
         }
         private void programMenu()
         {
-            MenuItem quotes = new MenuItem(QuoteMenu.PROGRAM_TITLE);
+            MenuItem quotes = new MenuItem(ProgramMenu.PROGRAM_TITLE);
             MenuItem add_ = new MenuItem("Add");
             MenuItem save = new MenuItem("Save");
             MenuItem exit = new MenuItem("Exit");
@@ -57,8 +64,7 @@ namespace QuoteManager
         }
         private void OnAdd(object sender, EventArgs ea)
         {
-            AddQuote addWindow = new AddQuote(loader.getStorage());
-
+            AddQuote addWindow = new AddQuote(loader.getStorage(),parent);
         }
     }
     public class PlaceholderedBox : TextBox
@@ -73,7 +79,7 @@ namespace QuoteManager
         }
         private void RemoveText(object sender, EventArgs ae)
         {
-            Text = "";
+            if (Text == placeholder) Text = "";
         }
         private void AddText(object sender, EventArgs ae)
         {
@@ -88,15 +94,18 @@ namespace QuoteManager
         Storage<Quote> storage;
         TextBox quote;
         TextBox author;
-        public AddQuote(Storage<Quote> quotes)
+        GUI main;
+        public AddQuote(Storage<Quote> quotes, GUI main)
         {
+            int labelWidth = StaticGUI.Width - (StaticGUI.TAB * 4);
             storage = quotes;
             quote = new PlaceholderedBox("Quote");
             author = new PlaceholderedBox("Author");
             author.Top = quote.Height;
             quote.Left = StaticGUI.TAB;
             author.Left = StaticGUI.TAB;
-            quote.Width = StaticGUI.Width - (StaticGUI.TAB * 4);
+            quote.Width = labelWidth;
+            author.Width = labelWidth;
             Button AddButton = new Button();
             AddButton.Top = quote.Height + author.Height;
             AddButton.Text = "Add";
@@ -108,6 +117,7 @@ namespace QuoteManager
             Controls.Add(AddButton);
             AddButton.Click += OnAdd;
             Closing += OnClose;
+            this.main = main;
             Show();
         }
         private void OnClose(object sender, EventArgs ae)
@@ -121,9 +131,10 @@ namespace QuoteManager
                 StaticGUI.ErrorMsg("Quote and Author are required",5);
                 return;
             }
-            Quote newQuote = new Quote(quote.Text,author.Text);
+            Quote newQuote = new Quote(author.Text,quote.Text);
             storage.Add(newQuote);
             Closing -= OnClose;
+            main.refresh();
             Close();
         }
     }
@@ -143,10 +154,8 @@ namespace QuoteManager
             Text = title;
             loader = load;
             quotes = storage;
-            Menu = new QuoteMenu(load);
+            Menu = new ProgramMenu(load,this);
             Application.ApplicationExit += OnExit;
-            currentAuthor.Text = storage.Get(i).author;
-            currentQuote.Text = storage.Get(i).getQuote();
             next.Left = ClientSize.Width - next.Width - StaticGUI.TAB;
             currentQuote.MaximumSize = new Size(ClientSize.Width - prev.Width - next.Width - (StaticGUI.TAB * 3),0);
             currentAuthor.AutoSize = true;
@@ -160,6 +169,15 @@ namespace QuoteManager
             next.Text = "Next";
             Controls.Add(prev);
             Controls.Add(next);
+            refresh();
+        }
+        public void refresh()
+        {
+            if(quotes.Length > 0)
+            {
+                currentQuote.Text = quotes.Get(i).getQuote();
+                currentAuthor.Text = quotes.Get(i).author;
+            }
             resizeLabels();
         }
         private void resizeLabels()

@@ -12,7 +12,7 @@ namespace QuoteManager
         public static void Main(string[] args)
         {
             Storage<Quote> quotes = new Storage<Quote>();
-            Loader load = new Loader(quotes,StaticGUI.ErrorMsg,"quotes.txt.txt");
+            Loader load = new Loader(quotes,StaticGUI.ErrorMsg);
             Application.Run(new GUI("QuoteManager",load,quotes));
         }
     }

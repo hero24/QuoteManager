@@ -12,15 +12,12 @@ namespace QuoteManager
         static string savedData = "quotes.bin";
         ErrorReport error;
         
-        public Loader(Storage<Quote> storage, ErrorReport errorOut,string failbackFilename)
+        public Loader(Storage<Quote> storage, ErrorReport errorOut)
         {
             error = errorOut;
             quotes = storage;
             FileInfo binaryData = new FileInfo(Loader.savedData);
-            if (!binaryData.Exists)
-            {
-                loadFromFile(failbackFilename);
-            } else
+            if (binaryData.Exists)
             {
                 loadBinaryData();
             }

@@ -42,8 +42,10 @@ namespace QuoteManager
             MenuItem current = new MenuItem(ProgramMenu.CURRENT_TITLE);
             MenuItem references = new MenuItem("Add reference");
             MenuItem flags = new MenuItem("Add flag");
+            MenuItem delete = new MenuItem("Delete");
             current.MenuItems.Add(references);
             current.MenuItems.Add(flags);
+            current.MenuItems.Add(delete);
             MenuItems.Add(current);
         }
         private void programMenu()

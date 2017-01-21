@@ -43,10 +43,13 @@ namespace QuoteManager
             MenuItem references = new MenuItem("Add reference");
             MenuItem flags = new MenuItem("Add flag");
             MenuItem delete = new MenuItem("Delete");
+            MenuItem copy = new MenuItem("Copy");
             current.MenuItems.Add(references);
             current.MenuItems.Add(flags);
+            current.MenuItems.Add(copy);
             current.MenuItems.Add(delete);
             delete.Click += OnDelete;
+            copy.Click += OnCopy;
             MenuItems.Add(current);
         }
         private void programMenu()
@@ -62,6 +65,10 @@ namespace QuoteManager
             quotes.MenuItems.Add(save);
             quotes.MenuItems.Add(exit);
             MenuItems.Add(quotes);
+        }
+        private void OnCopy(object sender, EventArgs ea)
+        {
+            Clipboard.SetText(parent.getCurrentQuote().ToString());
         }
         private void OnDelete(object sender, EventArgs ea)
         {
@@ -196,6 +203,10 @@ namespace QuoteManager
             Controls.Add(prev);
             Controls.Add(next);
             refresh();
+        }
+        public Quote getCurrentQuote()
+        {
+            return quotes.Get(i);
         }
         public void removeCurrent()
         {

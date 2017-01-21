@@ -9,6 +9,7 @@ namespace QuoteManager
         {
             Console.WriteLine("Error code {0}: {1}",code,error);
         }
+        [STAThreadAttribute()]
         public static void Main(string[] args)
         {
             Storage<Quote> quotes = new Storage<Quote>();

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 // "Ask any racer. Any real racer. It don't matter if you win by an inch or a mile. Winning's winning." ~ Dom Toretto. @ Fast and Furious
 namespace QuoteManager
 {
+    public delegate void ComboAction();
     public class GUIParent : Form
     {
         public GUIParent()
@@ -179,16 +180,23 @@ namespace QuoteManager
     {
         Button actionButton;
         GUI parent;
-        public DataList(string buttonText, GUI parent,int top, int left)
+        ComboAction action;
+        public DataList(ComboAction action, string buttonText, GUI parent,int top, int left)
         {
             this.parent = parent;
             Top = top;
             Left = left;
+            this.action = action;
             actionButton = new Button();
             actionButton.Text = buttonText;
             actionButton.Left = Left + StaticGUI.TAB + Width;
             actionButton.Top = Top;
+            actionButton.Click += OnClick;
             parent.Controls.Add(actionButton);
+        }
+        private void OnClick(object sender, EventArgs ae)
+        {
+            action();
         }
     }
     public class GUI:GUIParent
@@ -235,10 +243,14 @@ namespace QuoteManager
         }
         private void ComboBoxes()
         {
-            refs = new DataList(StaticGUI.ActionDelete,this,150,StaticGUI.TAB);
-            flags = new DataList(StaticGUI.ActionDelete,this,200,StaticGUI.TAB);
+            refs = new DataList(del,StaticGUI.ActionDelete,this,150,StaticGUI.TAB);
+            flags = new DataList(del,StaticGUI.ActionDelete,this,200,StaticGUI.TAB);
             Controls.Add(refs);
             Controls.Add(flags);
+        }
+        private void del()
+        {
+            StaticGUI.ErrorMsg("Not yet implemented",100);
         }
         public Quote getCurrentQuote()
         {

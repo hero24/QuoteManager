@@ -3,6 +3,19 @@ using System;
 namespace QuoteManager
 {
     [Serializable()]
+    public class DataSegment
+    {
+        string name;
+        public DataSegment(string reference)
+        {
+            name = reference;
+        }
+        public override string ToString()
+        {
+            return name;
+        }
+    }
+    [Serializable()]
     public class Quote
     {
         public string author
@@ -11,7 +24,6 @@ namespace QuoteManager
         }
         private string _author;
         private string quote;
-        private int i;
         /*
         TODO:
         maybe a serializable object for flag && reference
@@ -19,15 +31,14 @@ namespace QuoteManager
         references -> what the quote is about
         flags -> any user set flags such as, already used.
         */
-        private string[] references;
-        private string[] flags;
+        private Storage<DataSegment> references;
+        private Storage<DataSegment> flags;
         public Quote(string author, string quote)
         {
             this._author = author;
             this.quote = quote;
-            references = new string[10];
-            flags = new string[10];
-            i = 0;
+            references = new Storage<DataSegment>(10);
+            flags = new Storage<DataSegment>(10);
         }
         public string getQuote()
         {
@@ -35,7 +46,7 @@ namespace QuoteManager
         }
         public void addReference(string reference)
         {
-            references[i++] = reference; 
+            references.Add(new DataSegment(reference)); 
         }
         public override string ToString()
         {

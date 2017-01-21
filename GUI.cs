@@ -4,6 +4,15 @@ using System.Windows.Forms;
 // "Ask any racer. Any real racer. It don't matter if you win by an inch or a mile. Winning's winning." ~ Dom Toretto. @ Fast and Furious
 namespace QuoteManager
 {
+    public class GUIParent : Form
+    {
+        public GUIParent()
+        {
+            this.MaximizeBox = false;
+            //this.MinimizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+        }
+    }
     class StaticGUI
     {
         public static int Width = 800;
@@ -112,7 +121,7 @@ namespace QuoteManager
             }
         }
     }
-    public class AddQuote:Form
+    public class AddQuote:GUIParent
     {
         Storage<Quote> storage;
         TextBox quote;
@@ -165,7 +174,7 @@ namespace QuoteManager
             Close();
         }
     }
-    public class GUI:Form
+    public class GUI:GUIParent
     {        
         private Loader loader;
         private int i = 0;

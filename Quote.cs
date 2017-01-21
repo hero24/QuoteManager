@@ -39,6 +39,7 @@ namespace QuoteManager
             this.quote = quote;
             references = new Storage<DataSegment>(10);
             flags = new Storage<DataSegment>(10);
+            addReference("Test");
         }
         public string getQuote()
         {
@@ -47,6 +48,14 @@ namespace QuoteManager
         public void addReference(string reference)
         {
             references.Add(new DataSegment(reference)); 
+        }
+        public Storage<DataSegment> getReferences()
+        {
+            return references;
+        }
+        public Storage<DataSegment> getFlags()
+        {
+            return flags;
         }
         public override string ToString()
         {

@@ -181,17 +181,23 @@ namespace QuoteManager
         Button actionButton;
         GUI parent;
         ComboAction action;
-        public DataList(ComboAction action, string buttonText, GUI parent,int top, int left)
+        Storage<DataSegment> storage;
+        public DataList(ComboAction action, Storage<DataSegment> data,string buttonText, GUI parent,int top, int left)
         {
             this.parent = parent;
             Top = top;
             Left = left;
+            storage = data;
             this.action = action;
             actionButton = new Button();
             actionButton.Text = buttonText;
             actionButton.Left = Left + StaticGUI.TAB + Width;
             actionButton.Top = Top;
             actionButton.Click += OnClick;
+            for(int i = 0; i < storage.Length; i++)
+            {
+                Items.Add(storage.Get(i));
+            }
             parent.Controls.Add(actionButton);
         }
         private void OnClick(object sender, EventArgs ae)
@@ -243,10 +249,16 @@ namespace QuoteManager
         }
         private void ComboBoxes()
         {
-            refs = new DataList(del,StaticGUI.ActionDelete,this,150,StaticGUI.TAB);
-            flags = new DataList(del,StaticGUI.ActionDelete,this,200,StaticGUI.TAB);
+            refs = new DataList(del,quotes.Get(i).getReferences(),StaticGUI.ActionDelete,this,150,StaticGUI.TAB);
+            flags = new DataList(del,quotes.Get(i).getFlags(),StaticGUI.ActionDelete,this,200,StaticGUI.TAB);
             Controls.Add(refs);
             Controls.Add(flags);
+        }
+        private void changeCombos()
+        {
+            Controls.Remove(refs);
+            Controls.Remove(flags);
+            ComboBoxes();
         }
         private void del()
         {
@@ -274,7 +286,7 @@ namespace QuoteManager
         {
             currentAuthor.Left = (StaticGUI.TAB * 2) + prev.Width;
             currentQuote.Left = (StaticGUI.TAB * 2) + prev.Width;
-            currentAuthor.Top = currentQuote.Height;            
+            currentAuthor.Top = currentQuote.Height;
         }
         private void OnExit(Object sender, EventArgs ea)
         {
@@ -286,6 +298,7 @@ namespace QuoteManager
             {
                 currentAuthor.Text = quotes.Get(++i).author;
                 currentQuote.Text = quotes.Get(i).getQuote();
+                changeCombos();
                 resizeLabels();
             } else
             {

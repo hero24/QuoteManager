@@ -58,6 +58,8 @@ namespace QuoteManager
                 catch(Exception e)
                 {
                     error("Loading error, problem with reading saved quotes",2);
+                    //exit app?
+                    //create new db?
                 }
         }
         

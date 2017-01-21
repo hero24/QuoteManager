@@ -50,7 +50,7 @@ namespace QuoteManager
         }
         public override string ToString()
         {
-            return quote;
+            return quote + " ~ " + author;
         }
     }
 }

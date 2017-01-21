@@ -1,6 +1,7 @@
 using System;
 namespace QuoteManager
 {
+    //"Why is the rum always gone" ~ Jack Sparrow
     [Serializable()]
     public class Storage<T>
     {

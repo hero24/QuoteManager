@@ -178,10 +178,17 @@ namespace QuoteManager
     public class DataList:ComboBox
     {
         Button actionButton;
-        public DataList(string buttonText)
+        GUI parent;
+        public DataList(string buttonText, GUI parent,int top, int left)
         {
+            this.parent = parent;
+            Top = top;
+            Left = left;
             actionButton = new Button();
             actionButton.Text = buttonText;
+            actionButton.Left = Left + StaticGUI.TAB + Width;
+            actionButton.Top = Top;
+            parent.Controls.Add(actionButton);
         }
     }
     public class GUI:GUIParent
@@ -228,10 +235,8 @@ namespace QuoteManager
         }
         private void ComboBoxes()
         {
-            refs = new DataList(StaticGUI.ActionDelete);
-            flags = new DataList(StaticGUI.ActionDelete);
-            refs.Top = 150;
-            flags.Top = 200;
+            refs = new DataList(StaticGUI.ActionDelete,this,150,StaticGUI.TAB);
+            flags = new DataList(StaticGUI.ActionDelete,this,200,StaticGUI.TAB);
             Controls.Add(refs);
             Controls.Add(flags);
         }

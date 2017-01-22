@@ -204,7 +204,6 @@ namespace QuoteManager
             }
             this.delDS = delDS;
             parent.Controls.Add(actionButton);
-            //SelectedIndexChanged += OnChange;
         }
         private void OnClick(object sender, EventArgs ae)
         {

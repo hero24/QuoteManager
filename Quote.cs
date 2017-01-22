@@ -41,6 +41,7 @@ namespace QuoteManager
             flags = new Storage<DataSegment>(10);
             addReference("Test");
             addReference("Its my life");
+            addFlag("Read");
         }
         public string getQuote()
         {
@@ -49,6 +50,10 @@ namespace QuoteManager
         public void addReference(string reference)
         {
             references.Add(new DataSegment(reference)); 
+        }
+        public void addFlag(string flag)
+        {
+            flags.Add(new DataSegment(flag));
         }
         public Storage<DataSegment> getReferences()
         {

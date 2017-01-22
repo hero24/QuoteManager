@@ -65,7 +65,8 @@ namespace QuoteManager
         {
             for(int j = 0; j < i;j++)
             {
-                if(ReferenceEquals(storage[j],data))
+                Console.WriteLine("{0} , {1} ",storage[j].Equals(data), data.GetType());
+                if(storage[j].Equals(data))
                 {
                     RemoveAt(j);
                     break;

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 // "Ask any racer. Any real racer. It don't matter if you win by an inch or a mile. Winning's winning." ~ Dom Toretto. @ Fast and Furious
 namespace QuoteManager
 {
+    public delegate void ComboAction();
     public class GUIParent : Form
     {
         public GUIParent()
@@ -180,8 +181,8 @@ namespace QuoteManager
         Button actionButton;
         GUI parent;
         Storage<DataSegment> storage;
-        DataSegment currentData;
-        public DataList(Storage<DataSegment> data,string buttonText, GUI parent,int top, int left)
+        ComboAction delDS;
+        public DataList(Storage<DataSegment> data,string buttonText, GUI parent,int top, int left, ComboAction delDS)
         {
             this.parent = parent;
             DropDownStyle = ComboBoxStyle.DropDownList;
@@ -200,26 +201,14 @@ namespace QuoteManager
             if (storage.Length > 0) 
             {
                 SelectedIndex = 0;
-                currentData = (DataSegment) Items[0];
             }
+            this.delDS = delDS;
             parent.Controls.Add(actionButton);
-            SelectedIndexChanged += OnChange;
+            //SelectedIndexChanged += OnChange;
         }
         private void OnClick(object sender, EventArgs ae)
         {
             delDS();
-        }
-        private void OnChange(object sender, EventArgs ae)
-        {
-            StaticGUI.ErrorMsg("Changed " +  SelectedItem.ToString(),100);
-            currentData = (DataSegment) SelectedItem;
-        }
-        private void delDS()
-        {
-            StaticGUI.ErrorMsg("Not yet implemented",100);
-            Items.Remove(currentData);
-            storage.Remove(currentData);
-            parent.changeCombos();
         }
     }
     public class GUI:GUIParent
@@ -266,8 +255,8 @@ namespace QuoteManager
         }
         private void ComboBoxes()
         {
-            refs = new DataList(quotes.Get(i).getReferences(),StaticGUI.ActionDelete,this,150,StaticGUI.TAB);
-            flags = new DataList(quotes.Get(i).getFlags(),StaticGUI.ActionDelete,this,200,StaticGUI.TAB);
+            refs = new DataList(quotes.Get(i).getReferences(),StaticGUI.ActionDelete,this,150,StaticGUI.TAB,delRefs);
+            flags = new DataList(quotes.Get(i).getFlags(),StaticGUI.ActionDelete,this,200,StaticGUI.TAB,delFlags);
             Controls.Add(refs);
             Controls.Add(flags);
         }
@@ -276,6 +265,24 @@ namespace QuoteManager
             Controls.Remove(refs);
             Controls.Remove(flags);
             ComboBoxes();
+        }
+        private void delRefs()
+        {
+            if(refs.SelectedItem != null)
+            {
+                quotes.Get(i).getReferences().Remove(((DataSegment) refs.SelectedItem));
+                refs.Items.Remove(refs.SelectedItem);
+                refs.Refresh();
+            }
+        }
+        private void delFlags()
+        {
+            if(refs.SelectedItem != null)
+            {
+                quotes.Get(i).getFlags().Remove(((DataSegment) flags.SelectedItem));
+                flags.Items.Remove(flags.SelectedItem);
+                flags.Refresh();
+            }
         }
         public Quote getCurrentQuote()
         {

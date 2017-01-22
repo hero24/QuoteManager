@@ -178,6 +178,7 @@ namespace QuoteManager
     }
     public class DataList:ComboBox
     {
+        // Add Label;
         Button actionButton;
         GUI parent;
         Storage<DataSegment> storage;
@@ -198,16 +199,20 @@ namespace QuoteManager
             {
                 Items.Add(storage.Get(i));
             }
-            if (storage.Length > 0) 
-            {
-                SelectedIndex = 0;
-            }
+            AutoChoice();
             this.delDS = delDS;
             parent.Controls.Add(actionButton);
         }
         private void OnClick(object sender, EventArgs ae)
         {
             delDS();
+        }
+        public void AutoChoice()
+        {
+            if (storage.Length > 0) 
+            {
+                SelectedIndex = 0;
+            }
         }
     }
     public class GUI:GUIParent
@@ -271,6 +276,7 @@ namespace QuoteManager
             {
                 quotes.Get(i).getReferences().Remove(((DataSegment) refs.SelectedItem));
                 refs.Items.Remove(refs.SelectedItem);
+                refs.AutoChoice();
                 refs.Refresh();
             }
         }
@@ -280,6 +286,7 @@ namespace QuoteManager
             {
                 quotes.Get(i).getFlags().Remove(((DataSegment) flags.SelectedItem));
                 flags.Items.Remove(flags.SelectedItem);
+                refs.AutoChoice();
                 flags.Refresh();
             }
         }

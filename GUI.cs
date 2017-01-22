@@ -19,6 +19,8 @@ namespace QuoteManager
         public static int Width = 800;
         public static int TAB = 10;
         public static string ActionDelete = "Delete";
+        public static string FLAG = "Flags : ";
+        public static string REFS = "References : ";
         public static void ErrorMsg(string error, int code)
         {
             MessageBox.Show(error,"Error",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
@@ -88,6 +90,7 @@ namespace QuoteManager
             if(StaticGUI.ErrorMsgYesNo("Are you sure you want to delete this quote",6))
             {
                 parent.removeCurrent();
+                parent.refresh();
             }
         }
         private void OnExit(object sender, EventArgs ea)
@@ -180,17 +183,22 @@ namespace QuoteManager
     }
     public class DataList:ComboBox
     {
-        // Add Label;
         Button actionButton;
         GUI parent;
         Storage<DataSegment> storage;
         ComboAction delDS;
-        public DataList(Storage<DataSegment> data,string buttonText, GUI parent,int top, int left, ComboAction delDS)
+        Label desc;
+        public DataList(Storage<DataSegment> data,string buttonText, string Desc, GUI parent,int top, int left, ComboAction delDS)
         {
             this.parent = parent;
             DropDownStyle = ComboBoxStyle.DropDownList;
-            Top = top;
-            Left = left;
+            desc = new Label();
+            desc.AutoSize = true;
+            desc.Text = Desc;
+            desc.Top = top;
+            desc.Left = left;
+            Top = desc.Top;
+            Left = StaticGUI.TAB + desc.Left + desc.Width;
             storage = data;
             actionButton = new Button();
             actionButton.Text = buttonText;
@@ -203,6 +211,7 @@ namespace QuoteManager
             }
             AutoChoice();
             this.delDS = delDS;
+            parent.Controls.Add(desc);
             parent.Controls.Add(actionButton);
         }
         private void OnClick(object sender, EventArgs ae)
@@ -261,8 +270,8 @@ namespace QuoteManager
         }
         private void ComboBoxes()
         {
-            refs = new DataList(quotes.Get(i).getReferences(),StaticGUI.ActionDelete,this,150,StaticGUI.TAB,delRefs);
-            flags = new DataList(quotes.Get(i).getFlags(),StaticGUI.ActionDelete,this,200,StaticGUI.TAB,delFlags);
+            refs = new DataList(quotes.Get(i).getReferences(),StaticGUI.ActionDelete,StaticGUI.REFS,this,150,StaticGUI.TAB,delRefs);
+            flags = new DataList(quotes.Get(i).getFlags(),StaticGUI.ActionDelete,StaticGUI.FLAG,this,200,StaticGUI.TAB,delFlags);
             Controls.Add(refs);
             Controls.Add(flags);
         }
@@ -313,6 +322,7 @@ namespace QuoteManager
                 i--;
                 refresh();
             }
+            changeCombos();
             resizeLabels();
         }
         private void resizeLabels()

@@ -53,11 +53,13 @@ namespace QuoteManager
             MenuItem current = new MenuItem(ProgramMenu.CURRENT_TITLE);
             MenuItem references = new MenuItem("Add reference");
             MenuItem flags = new MenuItem("Add flag");
+            MenuItem edit = new MenuItem("Edit");
             MenuItem delete = new MenuItem(StaticGUI.ActionDelete);
             MenuItem copy = new MenuItem("Copy");
             current.MenuItems.Add(references);
             current.MenuItems.Add(flags);
             current.MenuItems.Add(copy);
+            current.MenuItems.Add(edit);
             current.MenuItems.Add(delete);
             delete.Click += OnDelete;
             copy.Click += OnCopy;
@@ -301,10 +303,15 @@ namespace QuoteManager
         }
         public void refresh()
         {
-            if(quotes.Length > 0)
+            if(quotes.Length > 0 && i < quotes.Length)
             {
                 currentQuote.Text = quotes.Get(i).getQuote();
                 currentAuthor.Text = quotes.Get(i).author;
+            }
+            else
+            {
+                i--;
+                refresh();
             }
             resizeLabels();
         }

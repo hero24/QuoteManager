@@ -310,6 +310,16 @@ namespace QuoteManager
             quotes.RemoveAt(i);
             refresh();
         }
+        public void clear()
+        {
+            currentQuote.Text = "";
+            currentAuthor.Text = "";
+            if(refs != null && flags != null)
+            {
+                refs.Items.Clear();
+                flags.Items.Clear();
+            }
+        }
         public void refresh()
         {
             if(quotes.Length > 0 && i < quotes.Length)
@@ -323,6 +333,10 @@ namespace QuoteManager
             {
                 i--;
                 refresh();
+            }else
+            {
+                clear();
+                //i++;
             }
         }
         private void resizeLabels()

@@ -130,34 +130,71 @@ namespace QuoteManager
     }
     public class AddQuote:GUIParent
     {
+        static string quotePlaceholder = "Quote";
+        static string authorPlaceholder = "Author";
+        static string referencePlaceholder = "References, separate by commas";
+        static string flagsPlaceholder = "Flags, separate by commas";
+        
         Storage<Quote> storage;
-        TextBox quote;
-        TextBox author;
+        PlaceholderedBox quote;
+        PlaceholderedBox author;
+        PlaceholderedBox references;
+        PlaceholderedBox flags;
         GUI main;
         public AddQuote(Storage<Quote> quotes, GUI main)
         {
             int labelWidth = StaticGUI.Width - (StaticGUI.TAB * 4);
             storage = quotes;
-            quote = new PlaceholderedBox("Quote");
-            author = new PlaceholderedBox("Author");
+            quote = new PlaceholderedBox(AddQuote.quotePlaceholder);
+            author = new PlaceholderedBox(AddQuote.authorPlaceholder);
+            references = new PlaceholderedBox(AddQuote.referencePlaceholder);
+            flags = new PlaceholderedBox(AddQuote.flagsPlaceholder);
             author.Top = quote.Height;
             quote.Left = StaticGUI.TAB;
             author.Left = StaticGUI.TAB;
             quote.Width = labelWidth;
             author.Width = labelWidth;
+            references.Width = labelWidth;
+            flags.Width = labelWidth;
+            references.Left = StaticGUI.TAB;
+            flags.Left = StaticGUI.TAB;
+            references.Top = author.Top + author.Height + StaticGUI.TAB;
+            flags.Top = references.Top + references.Height + StaticGUI.TAB;
             Button AddButton = new Button();
-            AddButton.Top = quote.Height + author.Height;
+            AddButton.Top = flags.Top + flags.Height + StaticGUI.TAB;
             AddButton.Text = "Add";
             AddButton.Left = StaticGUI.TAB;
             Text = "Add Quote";
             Width = StaticGUI.Width;
             Controls.Add(quote);
             Controls.Add(author);
+            Controls.Add(references);
+            Controls.Add(flags);
             Controls.Add(AddButton);
             AddButton.Click += OnAdd;
             Closing += OnClose;
             this.main = main;
             Show();
+        }
+        private void addData(PlaceholderedBox box, string placeholder, Quote quote_, ADD Add)
+        {
+            if(box.Text != placeholder)
+            {
+                string[] refs = box.Text.Split(',');
+                foreach(string ref_ in refs)
+                {
+                    Add(ref_.Trim(), quote_);
+                }
+            }
+        }
+        private delegate void ADD(string s, Quote q);
+        private void addRef(string s,Quote q)
+        {
+            q.addReference(s);
+        }
+        private void addFlag(string s, Quote q)
+        {
+            q.addFlag(s);
         }
         private void OnClose(object sender, EventArgs ae)
         {
@@ -169,12 +206,14 @@ namespace QuoteManager
         }
         private void OnAdd(object sender, EventArgs ae)
         {
-            if(quote.Text == "Quote" || author.Text == "Author")
+            if(quote.Text == AddQuote.quotePlaceholder || author.Text == AddQuote.authorPlaceholder)
             {
                 StaticGUI.ErrorMsg("Quote and Author are required",5);
                 return;
             }
             Quote newQuote = new Quote(author.Text,quote.Text);
+            addData(references,AddQuote.referencePlaceholder, newQuote, addRef);
+            addData(flags,AddQuote.flagsPlaceholder, newQuote, addFlag);
             storage.Add(newQuote);
             Closing -= OnClose;
             main.refresh();

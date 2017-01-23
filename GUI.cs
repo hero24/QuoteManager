@@ -265,7 +265,7 @@ namespace QuoteManager
             next.Text = "Next";
             Controls.Add(prev);
             Controls.Add(next);
-            ComboBoxes();
+            //ComboBoxes();
             refresh();
         }
         private void ComboBoxes()
@@ -316,14 +316,14 @@ namespace QuoteManager
             {
                 currentQuote.Text = quotes.Get(i).getQuote();
                 currentAuthor.Text = quotes.Get(i).author;
+                changeCombos();
+                resizeLabels();
             }
-            else
+            else if(i > 0)
             {
                 i--;
                 refresh();
             }
-            changeCombos();
-            resizeLabels();
         }
         private void resizeLabels()
         {

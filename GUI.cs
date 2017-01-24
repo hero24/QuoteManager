@@ -103,7 +103,7 @@ namespace QuoteManager
         }
         private void OnAdd(object sender, EventArgs ea)
         {
-            AddQuote addWindow = new AddQuote(loader.getStorage(),parent);
+            QuoteGUI addWindow = new QuoteGUI(loader.getStorage(),parent);
         }
     }
     public class PlaceholderedBox : TextBox
@@ -128,7 +128,7 @@ namespace QuoteManager
             }
         }
     }
-    public class AddQuote:GUIParent
+    public class QuoteGUI:GUIParent
     {
         static string quotePlaceholder = "Quote";
         static string authorPlaceholder = "Author";
@@ -136,19 +136,47 @@ namespace QuoteManager
         static string flagsPlaceholder = "Flags, separate by commas";
         
         Storage<Quote> storage;
+        Quote q;
         PlaceholderedBox quote;
         PlaceholderedBox author;
         PlaceholderedBox references;
         PlaceholderedBox flags;
         GUI main;
-        public AddQuote(Storage<Quote> quotes, GUI main)
+        public QuoteGUI(Quote quote, GUI main)
+        {
+            q = quote;
+            setup(main);
+            Button EditButton = new Button();
+            EditButton.Top = flags.Top + flags.Height +StaticGUI.TAB;
+            EditButton.Text = "Edit";
+            EditButton.Left = StaticGUI.TAB;
+            Text = "Edit Quote";
+            Width = StaticGUI.Width;
+            Controls.Add(EditButton);
+            EditButton.Click += OnEdit;
+            Show();
+        }
+        public QuoteGUI(Storage<Quote> quotes, GUI main)
+        {
+            setup(main);
+            storage = quotes;
+            Button AddButton = new Button();
+            AddButton.Top = flags.Top + flags.Height + StaticGUI.TAB;
+            AddButton.Text = "Add";
+            AddButton.Left = StaticGUI.TAB;
+            Text = "Add Quote";
+            Width = StaticGUI.Width;
+            Controls.Add(AddButton);
+            AddButton.Click += OnAdd;
+            Show();
+        }
+        private void setup(GUI main)
         {
             int labelWidth = StaticGUI.Width - (StaticGUI.TAB * 4);
-            storage = quotes;
-            quote = new PlaceholderedBox(AddQuote.quotePlaceholder);
-            author = new PlaceholderedBox(AddQuote.authorPlaceholder);
-            references = new PlaceholderedBox(AddQuote.referencePlaceholder);
-            flags = new PlaceholderedBox(AddQuote.flagsPlaceholder);
+            quote = new PlaceholderedBox(QuoteGUI.quotePlaceholder);
+            author = new PlaceholderedBox(QuoteGUI.authorPlaceholder);
+            references = new PlaceholderedBox(QuoteGUI.referencePlaceholder);
+            flags = new PlaceholderedBox(QuoteGUI.flagsPlaceholder);
             author.Top = quote.Height;
             quote.Left = StaticGUI.TAB;
             author.Left = StaticGUI.TAB;
@@ -160,21 +188,12 @@ namespace QuoteManager
             flags.Left = StaticGUI.TAB;
             references.Top = author.Top + author.Height + StaticGUI.TAB;
             flags.Top = references.Top + references.Height + StaticGUI.TAB;
-            Button AddButton = new Button();
-            AddButton.Top = flags.Top + flags.Height + StaticGUI.TAB;
-            AddButton.Text = "Add";
-            AddButton.Left = StaticGUI.TAB;
-            Text = "Add Quote";
-            Width = StaticGUI.Width;
             Controls.Add(quote);
             Controls.Add(author);
             Controls.Add(references);
             Controls.Add(flags);
-            Controls.Add(AddButton);
-            AddButton.Click += OnAdd;
-            Closing += OnClose;
             this.main = main;
-            Show();
+            Closing += OnClose;
         }
         private void addData(PlaceholderedBox box, string placeholder, Quote quote_, ADD Add)
         {
@@ -196,6 +215,10 @@ namespace QuoteManager
         {
             q.addFlag(s);
         }
+        private void OnEdit(object sender, EventArgs ae)
+        {
+            Console.WriteLine("not yet implemented");
+        }
         private void OnClose(object sender, EventArgs ae)
         {
             if(!StaticGUI.ErrorMsgYesNo("Are you sure, you will loose unsaved changes",4))
@@ -206,14 +229,14 @@ namespace QuoteManager
         }
         private void OnAdd(object sender, EventArgs ae)
         {
-            if(quote.Text == AddQuote.quotePlaceholder || author.Text == AddQuote.authorPlaceholder)
+            if(quote.Text == QuoteGUI.quotePlaceholder || author.Text == QuoteGUI.authorPlaceholder)
             {
                 StaticGUI.ErrorMsg("Quote and Author are required",5);
                 return;
             }
             Quote newQuote = new Quote(author.Text,quote.Text);
-            addData(references,AddQuote.referencePlaceholder, newQuote, addRef);
-            addData(flags,AddQuote.flagsPlaceholder, newQuote, addFlag);
+            addData(references,QuoteGUI.referencePlaceholder, newQuote, addRef);
+            addData(flags,QuoteGUI.flagsPlaceholder, newQuote, addFlag);
             storage.Add(newQuote);
             Closing -= OnClose;
             main.refresh();

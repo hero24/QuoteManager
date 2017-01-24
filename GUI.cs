@@ -65,6 +65,7 @@ namespace QuoteManager
             current.MenuItems.Add(delete);
             delete.Click += OnDelete;
             copy.Click += OnCopy;
+            edit.Click += OnEdit;
             MenuItems.Add(current);
         }
         private void programMenu()
@@ -80,6 +81,10 @@ namespace QuoteManager
             quotes.MenuItems.Add(save);
             quotes.MenuItems.Add(exit);
             MenuItems.Add(quotes);
+        }
+        private void OnEdit(object sender, EventArgs ea)
+        {
+            QuoteGUI quote = new QuoteGUI(parent.getCurrentQuote(), parent);
         }
         private void OnCopy(object sender, EventArgs ea)
         {
@@ -146,6 +151,8 @@ namespace QuoteManager
         {
             q = quote;
             setup(main);
+            this.quote.Text = q.getQuote();
+            author.Text = q.author;
             Button EditButton = new Button();
             EditButton.Top = flags.Top + flags.Height +StaticGUI.TAB;
             EditButton.Text = "Edit";
@@ -217,7 +224,10 @@ namespace QuoteManager
         }
         private void OnEdit(object sender, EventArgs ae)
         {
-            Console.WriteLine("not yet implemented");
+            q.Update(author.Text,quote.Text);
+            main.refresh();
+            Closing -= OnClose;
+            Close();
         }
         private void OnClose(object sender, EventArgs ae)
         {

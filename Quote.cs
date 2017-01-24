@@ -40,6 +40,11 @@ namespace QuoteManager
             references = new Storage<DataSegment>(10);
             flags = new Storage<DataSegment>(10);
         }
+        public void Update(string author, string quote)
+        {
+            _author = author;
+            this.quote = quote;
+        }
         public string getQuote()
         {
             return quote;

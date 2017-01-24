@@ -29,6 +29,7 @@ namespace QuoteManager
         
         public void loadFromFile(string filename)
         {
+            // Legacy code below.
             try
                 {
                     FileInfo quotesText = new FileInfo(filename);

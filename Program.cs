@@ -7,6 +7,7 @@ namespace QuoteManager
     {
         public static void ErrorReporter(string error,int code)
         {
+            // Legacy code
             Console.WriteLine("Error code {0}: {1}",code,error);
         }
         [STAThreadAttribute()]

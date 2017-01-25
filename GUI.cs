@@ -16,11 +16,11 @@ namespace QuoteManager
     }
     class StaticGUI
     {
-        public static int Width = 800;
-        public static int TAB = 10;
-        public static string ActionDelete = "Delete";
-        public static string FLAG = "Flags : ";
-        public static string REFS = "References : ";
+        public const int Width = 800;
+        public const int TAB = 10;
+        public const string ActionDelete = "Delete";
+        public const string FLAG = "Flags : ";
+        public const string REFS = "References : ";
         public static void ErrorMsg(string error, int code)
         {
             MessageBox.Show(error,"Error",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
@@ -39,8 +39,8 @@ namespace QuoteManager
         private void aboutMenu();
         private void Quotes -> Refresh();
         */
-        private static string PROGRAM_TITLE = "Quotes";
-        private static string CURRENT_TITLE = "Current";
+        private const string PROGRAM_TITLE = "Quotes";
+        private const string CURRENT_TITLE = "Current";
         Loader loader;
         GUI parent;
         public ProgramMenu(Loader loader, GUI parent)
@@ -135,10 +135,10 @@ namespace QuoteManager
     }
     public class QuoteGUI:GUIParent
     {
-        static string quotePlaceholder = "Quote";
-        static string authorPlaceholder = "Author";
-        static string referencePlaceholder = "References, separate by commas";
-        static string flagsPlaceholder = "Flags, separate by commas";
+        const string quotePlaceholder = "Quote";
+        const string authorPlaceholder = "Author";
+        const string referencePlaceholder = "References, separate by commas";
+        const string flagsPlaceholder = "Flags, separate by commas";
         
         Storage<Quote> storage;
         Quote q;
@@ -213,6 +213,15 @@ namespace QuoteManager
                 }
             }
         }
+        private string[] Extract(string Text)
+        {
+            string[] refs = Text.Split(',');
+            for(int i = 0;i < refs.Length ;i++)
+            {
+                refs[i] = refs[i].Trim();
+            }   
+            return refs;
+        }
         private delegate void ADD(string s, Quote q);
         private void addRef(string s,Quote q)
         {
@@ -225,6 +234,8 @@ namespace QuoteManager
         private void OnEdit(object sender, EventArgs ae)
         {
             q.Update(author.Text,quote.Text);
+            string[] refs = Extract(references.Text);
+            string[] flags = Extract(this.flags.Text);
             main.refresh();
             Closing -= OnClose;
             Close();

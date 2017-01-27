@@ -160,6 +160,7 @@ namespace QuoteManager
             Text = "Edit Quote";
             Width = StaticGUI.Width;
             Controls.Add(EditButton);
+            loadFlagsRefs();
             EditButton.Click += OnEdit;
             Show();
         }
@@ -176,6 +177,21 @@ namespace QuoteManager
             Controls.Add(AddButton);
             AddButton.Click += OnAdd;
             Show();
+        }
+        private void loadFlagsRefs()
+        {
+            string refs = "";
+            for(int i=0;i<q.getReferences().Length;i++)
+            {
+                refs += q.getReferences().Get(i).ToString() + ','; 
+            }
+            references.Text = refs;
+            string flag = "";
+            for(int i=0;i<q.getFlags().Length;i++)
+            {
+                flag += q.getFlags().Get(i).ToString() + ','; 
+            }
+            this.flags.Text = flag;
         }
         private void setup(GUI main)
         {

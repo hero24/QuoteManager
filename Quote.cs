@@ -40,10 +40,23 @@ namespace QuoteManager
             references = new Storage<DataSegment>(10);
             flags = new Storage<DataSegment>(10);
         }
-        public void Update(string author, string quote)
+        private void updateStorage(string[] data,Storage<DataSegment> segment)
+        {
+            foreach(string s in data)
+            {
+                DataSegment ds = new DataSegment(s);
+                if(!segment.Contains(ds)) 
+                { 
+                    segment.Add(ds);
+                }
+            }
+        }
+        public void Update(string author, string quote, string[] refs,string[] flags)
         {
             _author = author;
             this.quote = quote;
+            updateStorage(refs,references);
+            updateStorage(flags,this.flags);
         }
         public string getQuote()
         {

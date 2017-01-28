@@ -73,5 +73,15 @@ namespace QuoteManager
                 }
             }
         }
+        public bool Contains(T data)
+        {
+            string dataToString = data.ToString();
+            foreach(T cell in storage)
+            {
+                string cellToString = cell.ToString();
+                if(dataToString == cellToString) return true;
+            }
+            return false;
+        }
     }
 }

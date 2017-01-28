@@ -249,9 +249,9 @@ namespace QuoteManager
         }
         private void OnEdit(object sender, EventArgs ae)
         {
-            q.Update(author.Text,quote.Text);
             string[] refs = Extract(references.Text);
             string[] flags = Extract(this.flags.Text);
+            q.Update(author.Text,quote.Text,refs,flags);        
             main.refresh();
             Closing -= OnClose;
             Close();

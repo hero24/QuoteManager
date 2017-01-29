@@ -50,6 +50,15 @@ namespace QuoteManager
                     segment.Add(ds);
                 }   
             }
+            for(int i = 0;i < segment.Length;i++)
+            {
+                bool contains = false;
+                foreach(string s in data)
+                {
+                    if(segment.Get(i).ToString() == s) contains = true;
+                }
+                if(!contains) segment.RemoveAt(i);
+            }
         }
         public void Update(string author, string quote, string[] refs,string[] flags)
         {

@@ -78,6 +78,7 @@ namespace QuoteManager
             string dataToString = data.ToString();
             foreach(T cell in storage)
             {
+                if(cell == null) break;
                 string cellToString = cell.ToString();
                 if(dataToString == cellToString) return true;
             }

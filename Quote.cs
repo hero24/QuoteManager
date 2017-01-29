@@ -48,7 +48,7 @@ namespace QuoteManager
                 if(!segment.Contains(ds)) 
                 { 
                     segment.Add(ds);
-                }
+                }   
             }
         }
         public void Update(string author, string quote, string[] refs,string[] flags)

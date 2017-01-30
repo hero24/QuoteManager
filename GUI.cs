@@ -180,18 +180,25 @@ namespace QuoteManager
         }
         private void loadFlagsRefs()
         {
-            string refs = "";
-            for(int i=0;i<q.getReferences().Length;i++)
+            
+            if (q.getReferences().Length > 0)
             {
-                refs += q.getReferences().Get(i).ToString() + ','; 
-            }
-            references.Text = refs;
-            string flag = "";
-            for(int i=0;i<q.getFlags().Length;i++)
+                string refs = "";
+                for(int i=0;i<q.getReferences().Length;i++)
+                {
+                    refs += q.getReferences().Get(i).ToString() + ','; 
+                }
+                references.Text = refs;   
+            } 
+            if(q.getFlags().Length > 0)
             {
-                flag += q.getFlags().Get(i).ToString() + ','; 
+                string flag = "";
+                for(int i=0;i<q.getFlags().Length;i++)
+                {
+                    flag += q.getFlags().Get(i).ToString() + ','; 
+                }
+                this.flags.Text = flag;   
             }
-            this.flags.Text = flag;
         }
         private void setup(GUI main)
         {
@@ -249,8 +256,16 @@ namespace QuoteManager
         }
         private void OnEdit(object sender, EventArgs ae)
         {
-            string[] refs = Extract(references.Text);
-            string[] flags = Extract(this.flags.Text);
+            string[] refs;
+            string[] flags;
+            if(references.Text != referencePlaceholder) 
+                refs = Extract(references.Text);
+            else
+                refs = new string[0];
+            if(this.flags.Text != flagsPlaceholder)
+                flags = Extract(this.flags.Text);
+            else
+                flags = new string[0];
             q.Update(author.Text,quote.Text,refs,flags);        
             main.refresh();
             Closing -= OnClose;

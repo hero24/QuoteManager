@@ -14,6 +14,45 @@ namespace QuoteManager
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
     }
+    public class Prompt : GUIParent
+    {
+        PlaceholderedBox input;
+        Button accept;
+        Button cancel;
+        new public string Text
+        {
+            get 
+            {
+                return input.Text;
+            }
+        }
+        public Prompt(string text)
+        {
+            input = new PlaceholderedBox(text);
+            accept = new Button();
+            cancel = new Button();
+            accept.Text = "OK";
+            cancel.Text = "Cancel";
+            input.Top = StaticGUI.TAB;
+            cancel.Top = input.Top + input.Height + StaticGUI.TAB;
+            accept.Top = input.Top + input.Height + StaticGUI.TAB;
+            cancel.Left = accept.Width + accept.Left + StaticGUI.TAB;
+            Controls.Add(input);
+            Controls.Add(accept);
+            Controls.Add(cancel);
+            accept.Click += OnClick;
+            Width = cancel.Left + cancel.Width + StaticGUI.TAB;
+            input.Width = Width - (StaticGUI.TAB * 2);
+            input.Left = StaticGUI.TAB;
+            Height = input.Height + (StaticGUI.TAB * 6) + accept.Height;
+            this.MinimizeBox = false;            
+            Show();
+        }
+        private void OnClick(object o, EventArgs a)
+        {
+            Console.WriteLine(Text);
+        }
+    }
     class StaticGUI
     {
         public const int Width = 800;
@@ -63,6 +102,8 @@ namespace QuoteManager
             current.MenuItems.Add(copy);
             current.MenuItems.Add(edit);
             current.MenuItems.Add(delete);
+            references.Click += OnReferences;
+            flags.Click += OnFlags;
             delete.Click += OnDelete;
             copy.Click += OnCopy;
             edit.Click += OnEdit;
@@ -81,6 +122,14 @@ namespace QuoteManager
             quotes.MenuItems.Add(save);
             quotes.MenuItems.Add(exit);
             MenuItems.Add(quotes);
+        }
+        private void OnReferences(object sender, EventArgs ea)
+        {
+            Prompt p = new Prompt("References");
+        }
+        private void OnFlags(object sender, EventArgs ea)
+        {
+            Prompt p = new Prompt("Flags");
         }
         private void OnEdit(object sender, EventArgs ea)
         {

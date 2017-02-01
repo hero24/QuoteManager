@@ -48,10 +48,6 @@ namespace QuoteManager
             this.MinimizeBox = false;            
             Show();
         }
-        private void OnClick(object o, EventArgs a)
-        {
-            Console.WriteLine(Text);
-        }
     }
     class StaticGUI
     {

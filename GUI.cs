@@ -20,9 +20,9 @@ namespace QuoteManager
         Button accept;
         Button cancel;
         private Storage<DataSegment> ds;
-        Action<> action;
+        Action action;
        
-        public Prompt(string text, Storage<DataSegment> ds, Action<> action)
+        public Prompt(string text, Storage<DataSegment> ds, Action action)
         {
             input = new PlaceholderedBox(text);
             accept = new Button();
@@ -54,7 +54,6 @@ namespace QuoteManager
 
         protected internal void OnClick(object sender, EventArgs ea)
         {
-            // to fix: refreshing of the currently displayed quote
             ds.Add(new DataSegment(input.Text));
             this.action();
             this.Close();
@@ -132,11 +131,11 @@ namespace QuoteManager
         }
         private void OnReferences(object sender, EventArgs ea)
         {
-            Prompt p = new Prompt("References", parent.getCurrentQuote().getReferences(), parent.refresh);
+            Prompt p = new Prompt("References", parent.getCurrentQuote().getReferences(), parent.changeCombos);
         }
         private void OnFlags(object sender, EventArgs ea)
         {
-            Prompt p = new Prompt("Flags", parent.getCurrentQuote().getFlags(), parent.refresh);
+            Prompt p = new Prompt("Flags", parent.getCurrentQuote().getFlags(), parent.changeCombos);
         }
         private void OnEdit(object sender, EventArgs ea)
         {

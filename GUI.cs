@@ -19,14 +19,10 @@ namespace QuoteManager
         PlaceholderedBox input;
         Button accept;
         Button cancel;
-        new public string Text
-        {
-            get 
-            {
-                return input.Text;
-            }
-        }
-        public Prompt(string text)
+        private Storage<DataSegment> ds;
+        Action<> action;
+       
+        public Prompt(string text, Storage<DataSegment> ds, Action<> action)
         {
             input = new PlaceholderedBox(text);
             accept = new Button();
@@ -41,12 +37,27 @@ namespace QuoteManager
             Controls.Add(accept);
             Controls.Add(cancel);
             accept.Click += OnClick;
+            cancel.Click += OnCancel;
             Width = cancel.Left + cancel.Width + StaticGUI.TAB;
             input.Width = Width - (StaticGUI.TAB * 2);
             input.Left = StaticGUI.TAB;
             Height = input.Height + (StaticGUI.TAB * 6) + accept.Height;
-            this.MinimizeBox = false;            
+            this.MinimizeBox = false;  
+            this.ds = ds;
+            this.action = action;     
             Show();
+        }
+        protected internal void OnCancel(object sender, EventArgs ea)
+        {
+            this.Close();
+        }
+
+        protected internal void OnClick(object sender, EventArgs ea)
+        {
+            // to fix: refreshing of the currently displayed quote
+            ds.Add(new DataSegment(input.Text));
+            this.action();
+            this.Close();
         }
     }
     class StaticGUI
@@ -121,11 +132,11 @@ namespace QuoteManager
         }
         private void OnReferences(object sender, EventArgs ea)
         {
-            Prompt p = new Prompt("References");
+            Prompt p = new Prompt("References", parent.getCurrentQuote().getReferences(), parent.refresh);
         }
         private void OnFlags(object sender, EventArgs ea)
         {
-            Prompt p = new Prompt("Flags");
+            Prompt p = new Prompt("Flags", parent.getCurrentQuote().getFlags(), parent.refresh);
         }
         private void OnEdit(object sender, EventArgs ea)
         {
@@ -291,7 +302,7 @@ namespace QuoteManager
             return refs;
         }
         private delegate void ADD(string s, Quote q);
-        private void addRef(string s,Quote q)
+        private void addRef(string s, Quote q)
         {
             q.addReference(s);
         }
@@ -373,7 +384,7 @@ namespace QuoteManager
             parent.Controls.Add(desc);
             parent.Controls.Add(actionButton);
         }
-        private void OnClick(object sender, EventArgs ae)
+        protected internal void OnClick(object sender, EventArgs ae)
         {
             delDS();
         }

@@ -82,7 +82,6 @@ namespace QuoteManager
         /*
         TODO:
         private void aboutMenu();
-        private void Quotes -> Refresh();
         */
         private const string PROGRAM_TITLE = "Quotes";
         private const string CURRENT_TITLE = "Current";
@@ -103,16 +102,19 @@ namespace QuoteManager
             MenuItem edit = new MenuItem("Edit");
             MenuItem delete = new MenuItem(StaticGUI.ActionDelete);
             MenuItem copy = new MenuItem("Copy");
+            MenuItem refresh = new MenuItem("Refresh");
             current.MenuItems.Add(references);
             current.MenuItems.Add(flags);
             current.MenuItems.Add(copy);
             current.MenuItems.Add(edit);
             current.MenuItems.Add(delete);
+            current.MenuItems.Add(refresh);
             references.Click += OnReferences;
             flags.Click += OnFlags;
             delete.Click += OnDelete;
             copy.Click += OnCopy;
             edit.Click += OnEdit;
+            refresh.Click += OnRefresh;
             MenuItems.Add(current);
         }
         private void programMenu()
@@ -128,6 +130,10 @@ namespace QuoteManager
             quotes.MenuItems.Add(save);
             quotes.MenuItems.Add(exit);
             MenuItems.Add(quotes);
+        }
+        private void OnRefresh(object sender, EventArgs ea)
+        {
+            parent.refresh();
         }
         private void OnReferences(object sender, EventArgs ea)
         {

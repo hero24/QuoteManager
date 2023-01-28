@@ -70,6 +70,10 @@ namespace QuoteManager
         {
             MessageBox.Show(error,"Error",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
         }
+        public static void Msg(string msg, string title)
+        {
+            MessageBox.Show(msg, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
         public static bool ErrorMsgYesNo(string error,int code)
         {
             DialogResult result = MessageBox.Show(error,"Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Exclamation);
@@ -77,61 +81,53 @@ namespace QuoteManager
             else return false;
         }
     }
-    class ProgramMenu : MainMenu
+    class AboutMenu : MenuItem
     {
-        /*
-        TODO:
-        private void aboutMenu();
-        */
-        private const string PROGRAM_TITLE = "Quotes";
-        private const string CURRENT_TITLE = "Current";
-        Loader loader;
-        GUI parent;
-        public ProgramMenu(Loader loader, GUI parent)
+        protected const string TITLE = "About";
+        private const string ABOUT = "QuoteManager v1 by hero24";
+        public AboutMenu() : base(AboutMenu.TITLE)
         {
-            this.loader = loader;
-            this.parent = parent;
-            programMenu();
-            currentMenu();            
+            var about = new MenuItem(TITLE);
+            this.MenuItems.Add(about);
+            about.Click += OnAbout;
         }
-        private void currentMenu()
+        private void OnAbout(object sender, EventArgs ea)
         {
-            MenuItem current = new MenuItem(ProgramMenu.CURRENT_TITLE);
-            MenuItem references = new MenuItem("Add reference");
-            MenuItem flags = new MenuItem("Add flag");
-            MenuItem edit = new MenuItem("Edit");
-            MenuItem delete = new MenuItem(StaticGUI.ActionDelete);
-            MenuItem copy = new MenuItem("Copy");
-            MenuItem refresh = new MenuItem("Refresh");
-            current.MenuItems.Add(references);
-            current.MenuItems.Add(flags);
-            current.MenuItems.Add(copy);
-            current.MenuItems.Add(edit);
-            current.MenuItems.Add(delete);
-            current.MenuItems.Add(refresh);
+            StaticGUI.Msg(ABOUT, TITLE);
+        }
+    }
+    class CurrentMenu : MenuItem
+    {
+        protected const string TITLE = "Current";
+        private const string REFERENCE = "Add reference";
+        private const string FLAG = "Add flag";
+        private const string EDIT = "Edit";
+        private const string COPY = "Copy";
+        private const string REFRESH = "Refresh";
+        GUI parent;
+        public CurrentMenu(GUI parent) : base(CurrentMenu.TITLE)
+        {
+            var references = new MenuItem(REFERENCE);
+            var flags = new MenuItem(FLAG);
+            var edit = new MenuItem(EDIT);
+            var delete = new MenuItem(StaticGUI.ActionDelete);
+            var copy = new MenuItem(COPY);
+            var refresh = new MenuItem(REFRESH);
+            this.MenuItems.Add(references);
+            this.MenuItems.Add(flags);
+            this.MenuItems.Add(copy);
+            this.MenuItems.Add(edit);
+            this.MenuItems.Add(delete);
+            this.MenuItems.Add(refresh);
             references.Click += OnReferences;
             flags.Click += OnFlags;
             delete.Click += OnDelete;
             copy.Click += OnCopy;
             edit.Click += OnEdit;
             refresh.Click += OnRefresh;
-            MenuItems.Add(current);
+            this.parent = parent;
         }
-        private void programMenu()
-        {
-            MenuItem quotes = new MenuItem(ProgramMenu.PROGRAM_TITLE);
-            MenuItem add_ = new MenuItem("Add");
-            MenuItem save = new MenuItem("Save");
-            MenuItem exit = new MenuItem("Exit");
-            exit.Click += OnExit;
-            save.Click += OnLoad;
-            add_.Click += OnAdd;
-            quotes.MenuItems.Add(add_);
-            quotes.MenuItems.Add(save);
-            quotes.MenuItems.Add(exit);
-            MenuItems.Add(quotes);
-        }
-        private void OnRefresh(object sender, EventArgs ea)
+                private void OnRefresh(object sender, EventArgs ea)
         {
             parent.refresh();
         }
@@ -159,6 +155,29 @@ namespace QuoteManager
                 parent.refresh();
             }
         }
+    }
+    class QuotesMenu:MenuItem
+    {
+        protected const string TITLE = "Quotes";
+        private const string ADD = "Add";
+        private const string SAVE = "Save";
+        private const string EXIT = "Exit";
+        Loader loader;
+        GUI parent;
+        public QuotesMenu(Loader loader, GUI parent) : base(QuotesMenu.TITLE)
+        {
+            var add_ = new MenuItem(ADD);
+            var save = new MenuItem(SAVE);
+            var exit = new MenuItem(EXIT);
+            exit.Click += OnExit;
+            save.Click += OnLoad;
+            add_.Click += OnAdd;
+            this.MenuItems.Add(add_);
+            this.MenuItems.Add(save);
+            this.MenuItems.Add(exit);
+            this.loader = loader;
+            this.parent = parent;
+        }
         private void OnExit(object sender, EventArgs ea)
         {
             Application.Exit();
@@ -170,6 +189,22 @@ namespace QuoteManager
         private void OnAdd(object sender, EventArgs ea)
         {
             QuoteGUI addWindow = new QuoteGUI(loader.getStorage(),parent);
+        }
+    }
+    class ProgramMenu : MainMenu
+    {
+        Loader loader;
+        GUI parent;
+        public ProgramMenu(Loader loader, GUI parent)
+        {
+            this.loader = loader;
+            this.parent = parent;
+            var quotes = new QuotesMenu(loader, parent);
+            var current = new CurrentMenu(parent);
+            var about = new AboutMenu();
+            MenuItems.Add(quotes);
+            MenuItems.Add(current);
+            MenuItems.Add(about);
         }
     }
     public class PlaceholderedBox : TextBox
@@ -552,4 +587,3 @@ namespace QuoteManager
         }
     }
 }
-
